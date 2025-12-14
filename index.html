@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Radio Player</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #444);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .player-box {
+            background: #222;
+            padding: 20px;
+            margin: auto;
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px black;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 8px;
+            border: none;
+            border-radius: 6px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .station-list {
+            margin-top: 20px;
+        }
+
+        .station-item {
+            background: #333;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px;
+            cursor: pointer;
+        }
+
+        .station-item:hover {
+            background: #666;
+        }
+
+        #currentStation {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #00eaff;
+        }
+
+        input[type="range"] {
+            width: 80%;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Online Radio Player</h1>
+
+    <div class="player-box">
+
+        <audio id="audioPlayer"></audio>
+
+        <p id="currentStation">No station playing</p>
+
+        <button onclick="playAudio()">Play</button>
+        <button onclick="pauseAudio()">Pause</button>
+        <button onclick="stopAudio()">Stop</button>
+        <button onclick="playRandom()">Random</button>
+
+        <br><br>
+        <label>Volume</label>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01">
+
+        <div class="station-list">
+            <h3>Select a Radio Station</h3>
+
+            <div class="station-item" onclick="setStation(0)">ChillSynth – NightRide</div>
+            <div class="station-item" onclick="setStation(1)">Iowa Public Radio – Classical</div>
+            <div class="station-item" onclick="setStation(2)">Prog House – Hirschmilch</div>
+            <div class="station-item" onclick="setStation(3)">Jazz Radio – Rozhlas</div>
+            <div class="station-item" onclick="setStation(4)">Radio France – Electro</div>
+        </div>
+    </div>
+
+    <script>
+        const stations = [
+            "https://stream.nightride.fm/chillsynth.mp3",
+            "https://classical-stream.iowapublicradio.org/ClassicalLow.mp3",
+            "https://hirschmilch.de:7001/prog-house.mp3",
+            "https://rozhlas.stream/jazz.mp3",
+            "https://icecast.radiofrance.fr/fipelectro-midfi.mp3"
+        ];
+
+        const stationNames = [
+            "ChillSynth – NightRide",
+            "Iowa Public Radio – Classical",
+            "Prog House – Hirschmilch",
+            "Jazz Radio – Rozhlas",
+            "Radio France – Electro"
+        ];
+
+        const player = document.getElementById("audioPlayer");
+        const currentStationLabel = document.getElementById("currentStation");
+        const volumeSlider = document.getElementById("volumeSlider");
+
+        volumeSlider.addEventListener("input", function() {
+            player.volume = volumeSlider.value;
+        });
+
+        function setStation(index) {
+            player.src = stations[index];
+            player.play().catch(err => {
+                alert("Browser blocked playback. Press Play after selecting a station.");
+            });
+            currentStationLabel.textContent = "Playing: " + stationNames[index];
+        }
+
+        function playAudio() {
+            player.play().catch(err => alert("Press a station first!"));
+        }
+
+        function pauseAudio() {
+            player.pause();
+        }
+
+        function stopAudio() {
+            player.pause();
+            player.currentTime = 0;
+        }
+
+        function playRandom() {
+            let randomIndex = Math.floor(Math.random() * stations.length);
+            setStation(randomIndex);
+        }
+    </script>
+</body>
+</html>
